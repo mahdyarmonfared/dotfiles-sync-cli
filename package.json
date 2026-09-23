@@ -1,0 +1,39 @@
+{
+  "name": "dotfiles-sync-cli",
+  "version": "1.0.0",
+  "description": "Developer environment dotfiles manager with automated secret scrubbing, collision-safe restore, diff viewer, and web dashboard.",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "dotfiles-sync": "./bin/dotfiles-sync.js",
+    "dotfiles": "./bin/dotfiles-sync.js"
+  },
+  "scripts": {
+    "start": "node ./bin/dotfiles-sync.js ui",
+    "ui": "node ./bin/dotfiles-sync.js ui",
+    "test": "node --test tests/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahdyarmonfared/dotfiles-sync-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mahdyarmonfared/dotfiles-sync-cli/issues"
+  },
+  "homepage": "https://github.com/mahdyarmonfared/dotfiles-sync-cli#readme",
+  "keywords": [
+    "dotfiles",
+    "cli",
+    "sync",
+    "backup",
+    "restore",
+    "secret-detection",
+    "bash",
+    "zsh",
+    "gitconfig",
+    "vscode",
+    "developer-tools"
+  ],
+  "author": "Mahdyar Monfared (https://github.com/mahdyarmonfared)",
+  "license": "MIT"
+}
