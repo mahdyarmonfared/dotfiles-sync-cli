@@ -73,7 +73,13 @@ export async function createBackup(options = {}) {
     const srcPath = item.absPath;
     const destPath = path.join(backupRootDir, item.relPath);
 
-    let rawContent = await fs.readFile(srcPath, 'utf-8');
+    let rawContent = '';
+    try {
+      rawContent = await fs.readFile(srcPath, 'utf-8');
+    } catch (err) {
+      console.warn(`[dotfiles-sync] Skipping unreadable file ${item.relPath}: ${err.message}`);
+      continue;
+    }
     let finalContent = rawContent;
     let wasModified = false;
 

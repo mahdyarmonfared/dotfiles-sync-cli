@@ -101,4 +101,12 @@ describe('Dotfiles Sync Server API Tests', () => {
     assert.equal(res.body.relPath, '.bashrc');
     assert.equal(typeof res.body.hasChanges, 'boolean');
   });
+
+  test('POST /api/diff rejects path traversal attempts with 403', async () => {
+    const res = await request('/api/diff', 'POST', {
+      relPath: '../../../../etc/passwd'
+    });
+    assert.equal(res.status, 403);
+    assert.equal(res.body.error, 'Path traversal forbidden');
+  });
 });

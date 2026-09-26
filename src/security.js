@@ -111,13 +111,14 @@ export function sanitizeContent(content) {
     '# [DOTFILES_SYNC_REDACTED: PRIVATE KEY BLOCK REMOVED]'
   );
 
-  // Redact GitHub and OpenAI tokens
+  // Redact GitHub, OpenAI, and AWS tokens
   sanitized = sanitized.replace(/\b(ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{82})\b/g, '[REDACTED_GITHUB_TOKEN]');
   sanitized = sanitized.replace(/\b(sk-[A-Za-z0-9]{32,64})\b/g, '[REDACTED_API_KEY]');
+  sanitized = sanitized.replace(/\b(AKIA[0-9A-Z]{16})\b/g, '[REDACTED_AWS_KEY]');
 
   // Redact export PASSWORD="..."
   sanitized = sanitized.replace(
-    /(^\s*export\s+(?:[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|AUTH_TOKEN|PRIVATE_KEY)[A-Z0-9_]*)\s*=\s*['"]?)([^'"\r\n]{8,})(['"]?)/gim,
+    /(^\s*export\s+(?:[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|AUTH_TOKEN|TOKEN|API_KEY|PRIVATE_KEY)[A-Z0-9_]*)\s*=\s*['"]?)(?!\[REDACTED_)([^'"\r\n]{8,})(['"]?)/gim,
     '$1[REDACTED_SECRET]$3'
   );
 

@@ -33,13 +33,15 @@ export OPENAI_KEY="sk-123456789012345678901234567890123456"
   });
 
   test('sanitizeContent redacts sensitive values cleanly', () => {
-    const content = `export GITHUB_TOKEN="ghp_123456789012345678901234567890123456"\nexport DB_PASSWORD="mySuperSecretPassword123"`;
+    const content = `export GITHUB_TOKEN="ghp_123456789012345678901234567890123456"\nexport DB_PASSWORD="mySuperSecretPassword123"\nexport AWS_KEY="AKIAIOSFODNN7EXAMPLE"`;
     const sanitized = sanitizeContent(content);
 
     assert.ok(!sanitized.includes('ghp_123456789012345678901234567890123456'));
     assert.ok(!sanitized.includes('mySuperSecretPassword123'));
+    assert.ok(!sanitized.includes('AKIAIOSFODNN7EXAMPLE'));
     assert.match(sanitized, /\[REDACTED_GITHUB_TOKEN\]/);
     assert.match(sanitized, /\[REDACTED_SECRET\]/);
+    assert.match(sanitized, /\[REDACTED_AWS_KEY\]/);
   });
 
   test('matchesIgnore respects pattern matching', () => {

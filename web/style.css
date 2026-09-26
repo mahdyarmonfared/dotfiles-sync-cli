@@ -575,3 +575,13 @@ body {
 
 .toast-success { border-color: var(--success); }
 .toast-error { border-color: var(--danger); }
+
+/* Loading Animation */
+.action-btn.loading svg {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -121,15 +121,21 @@ export function createServer(options = {}) {
           return sendJson(400, { error: 'Missing relPath parameter' });
         }
 
+        const livePath = path.resolve(homeDir, relPath);
+        if (!livePath.startsWith(path.resolve(homeDir) + path.sep) && livePath !== path.resolve(homeDir)) {
+          return sendJson(403, { error: 'Path traversal forbidden' });
+        }
+
         // If no backupDir provided, use latest backup
         if (!backupDir) {
           const backups = await listBackups(backupRoot);
           if (backups.length > 0) {
             backupDir = backups[0].dirPath;
+          } else {
+            return sendJson(400, { error: 'No backups found to diff against. Create a backup snapshot first.' });
           }
         }
 
-        const livePath = path.join(homeDir, relPath);
         let liveContent = '';
         try {
           liveContent = await fs.readFile(livePath, 'utf-8');
@@ -139,7 +145,10 @@ export function createServer(options = {}) {
 
         let backupContent = '';
         if (backupDir) {
-          const backupFilePath = path.join(backupDir, relPath);
+          const backupFilePath = path.resolve(backupDir, relPath);
+          if (!backupFilePath.startsWith(path.resolve(backupDir) + path.sep) && backupFilePath !== path.resolve(backupDir)) {
+            return sendJson(403, { error: 'Path traversal forbidden' });
+          }
           try {
             backupContent = await fs.readFile(backupFilePath, 'utf-8');
           } catch {

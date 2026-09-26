@@ -299,29 +299,34 @@ async function loadDiff(relPath) {
       body: JSON.stringify({ relPath })
     });
 
-    if (res.ok) {
-      const data = await res.json();
-      diffAdds.textContent = `+${data.additions}`;
-      diffDels.textContent = `-${data.deletions}`;
+    const data = await res.json();
+    if (!res.ok) {
+      diffViewer.textContent = data.error || 'Failed to load diff.';
+      diffAdds.textContent = '+0';
+      diffDels.textContent = '-0';
+      return;
+    }
 
-      if (!data.hasChanges) {
-        diffViewer.textContent = `Active ${relPath} is identical to the snapshot version (No changes).`;
-      } else {
-        diffViewer.innerHTML = '';
-        data.lines.forEach(l => {
-          const div = document.createElement('div');
-          if (l.type === 'add') {
-            div.className = 'diff-line-add';
-            div.textContent = `+ ${l.text}`;
-          } else if (l.type === 'del') {
-            div.className = 'diff-line-del';
-            div.textContent = `- ${l.text}`;
-          } else {
-            div.textContent = `  ${l.text}`;
-          }
-          diffViewer.appendChild(div);
-        });
-      }
+    diffAdds.textContent = `+${data.additions}`;
+    diffDels.textContent = `-${data.deletions}`;
+
+    if (!data.hasChanges) {
+      diffViewer.textContent = `Active ${relPath} is identical to the snapshot version (No changes).`;
+    } else {
+      diffViewer.innerHTML = '';
+      data.lines.forEach(l => {
+        const div = document.createElement('div');
+        if (l.type === 'add') {
+          div.className = 'diff-line-add';
+          div.textContent = `+ ${l.text}`;
+        } else if (l.type === 'del') {
+          div.className = 'diff-line-del';
+          div.textContent = `- ${l.text}`;
+        } else {
+          div.textContent = `  ${l.text}`;
+        }
+        diffViewer.appendChild(div);
+      });
     }
   } catch (err) {
     diffViewer.textContent = 'Failed to load diff.';
@@ -408,7 +413,8 @@ async function executeRestore() {
       showToast(dryRun ? `Dry-run: ${data.filesRestored} files would be restored` : `Restored ${data.filesRestored} files safely!`, 'success');
       await fetchScan();
     } else {
-      showToast('Restore failed', 'error');
+      const errData = await res.json().catch(() => ({}));
+      showToast(errData.error || 'Restore failed', 'error');
     }
   } catch (err) {
     showToast('Failed to restore snapshot', 'error');

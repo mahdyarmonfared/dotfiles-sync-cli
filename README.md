@@ -4,9 +4,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
-[![Tests Passing](https://img.shields.io/badge/tests-15%2F15%20passed-success.svg)](tests/)
+[![Tests Passing](https://img.shields.io/badge/tests-17%2F17%20passed-success.svg)](tests/)
 [![Port](https://img.shields.io/badge/local%20port-3007-purple.svg)](http://localhost:3007)
 [![Security Guard](https://img.shields.io/badge/secret--guard-active-emerald.svg)](#security--secret-guard)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/mahdyarmonfared/dotfiles-sync-cli/pulls)
 
 ---
 
@@ -137,15 +138,15 @@ npm test
 ```
 
 ```text
-▶ Dotfiles Backup & Restore Integration Tests (3 tests) - OK
+▶ Dotfiles Backup & Restore Integration Tests (4 tests) - OK
 ▶ Dotfiles Differ Tests (2 tests) - OK
 ▶ Dotfiles Scanner Tests (1 test) - OK
 ▶ Dotfiles Security & Secret Guard Tests (4 tests) - OK
-▶ Dotfiles Sync Server API Tests (5 tests) - OK
+▶ Dotfiles Sync Server API Tests (6 tests) - OK
 
-ℹ tests 15
+ℹ tests 17
 ℹ suites 5
-ℹ pass 15
+ℹ pass 17
 ℹ fail 0
 ```
 

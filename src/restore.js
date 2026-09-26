@@ -34,8 +34,13 @@ export async function restoreBackup(backupDir, options = {}) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
   for (const fileInfo of manifest.files) {
-    const srcInBackup = path.join(backupDir, fileInfo.relPath);
-    const destInHome = path.join(targetHome, fileInfo.relPath);
+    const srcInBackup = path.resolve(backupDir, fileInfo.relPath);
+    const destInHome = path.resolve(targetHome, fileInfo.relPath);
+
+    // Path traversal security check
+    if (!destInHome.startsWith(path.resolve(targetHome) + path.sep) && destInHome !== path.resolve(targetHome)) {
+      throw new Error(`Security Exception: Path traversal attempt detected for file '${fileInfo.relPath}'`);
+    }
 
     // Check if source exists in backup
     try {

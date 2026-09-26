@@ -91,4 +91,18 @@ describe('Dotfiles Backup & Restore Integration Tests', () => {
     const safetyContent = await fs.readFile(safetyFile, 'utf-8');
     assert.match(safetyContent, /Existing local bashrc/);
   });
+
+  test('restoreBackup throws on path traversal attempt in manifest', async () => {
+    const maliciousDir = path.join(tmpBackupDir, 'snapshot-malicious');
+    await fs.mkdir(maliciousDir, { recursive: true });
+    await fs.writeFile(path.join(maliciousDir, 'manifest.json'), JSON.stringify({
+      version: '1.0.0',
+      files: [{ relPath: '../../../../etc/shadow' }]
+    }), 'utf-8');
+
+    await assert.rejects(
+      async () => restoreBackup(maliciousDir, { targetHome: tmpRestoreHome }),
+      /Security Exception: Path traversal attempt detected/
+    );
+  });
 });
